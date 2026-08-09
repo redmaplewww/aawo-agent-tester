@@ -1,0 +1,17 @@
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+build/
+dist/
+dist-*/
+artifacts/
+.uka-state/
+.verify-*/
+.agents/
+universal-knowledge-agent/
+universal-knowledge-agent-langgraph/
+src/*.egg-info/
+*.sqlite3
+/.env.local
