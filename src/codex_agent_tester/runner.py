@@ -75,36 +75,102 @@ class CustomerSimulationRunner:
                 if step.kind == "user_input":
                     observation = await adapter.send(session, step.payload)
                     observations.append((step.step_id, observation))
-                    self._record_event(run_id, step.step_id, "request", step.payload)
-                    self._record_event(run_id, step.step_id, "response", observation.to_dict())
+                    request_event_id = self._record_event(run_id, step.step_id, "request", step.payload)
+                    response_event_id = self._record_event(run_id, step.step_id, "response", observation.to_dict())
+                    evidence_ids = (request_event_id, response_event_id)
                     if observation.is_unknown:
-                        result = StepResult(step.step_id, StepStatus.UNKNOWN, observation)
+                        result = StepResult(step.step_id, StepStatus.UNKNOWN, observation, evidence_ids=evidence_ids)
                         results.append(result)
                         status = RunStatus.INCONCLUSIVE
                         findings.append(self._finding(run_id, step.step_id, FindingKind.ADAPTER_ERROR, Severity.HIGH, "结果未知，禁止继续放行", observation.error or "adapter returned unknown"))
                         break
                     if observation.is_blocked:
-                        result = StepResult(step.step_id, StepStatus.BLOCKED, observation)
+                        result = StepResult(step.step_id, StepStatus.BLOCKED, observation, evidence_ids=evidence_ids)
                         results.append(result)
                         status = RunStatus.BLOCKED
                         findings.append(self._finding(run_id, step.step_id, FindingKind.ADAPTER_ERROR, Severity.MEDIUM, "测试被环境或审批门禁阻塞", observation.error or "adapter blocked"))
                         break
                     if observation.status != "ok":
-                        result = StepResult(step.step_id, StepStatus.FAILED, observation)
+                        result = StepResult(step.step_id, StepStatus.FAILED, observation, evidence_ids=evidence_ids)
                         results.append(result)
                         status = RunStatus.FAIL
                         findings.append(self._finding(run_id, step.step_id, FindingKind.ADAPTER_ERROR, Severity.HIGH, "被测 Agent 或适配器返回失败", observation.error or observation.status))
                         break
                     errors = validate(observation.output, profile.output_schema)
                     if errors:
-                        result = StepResult(step.step_id, StepStatus.FAILED, observation, errors)
+                        result = StepResult(step.step_id, StepStatus.FAILED, observation, errors, evidence_ids)
                         results.append(result)
                         status = RunStatus.FAIL
                         findings.append(self._finding(run_id, step.step_id, FindingKind.CONTRACT_VIOLATION, Severity.HIGH, "输出契约不满足", "; ".join(errors)))
                         break
-                    results.append(StepResult(step.step_id, StepStatus.OBSERVED, observation))
+                    results.append(StepResult(step.step_id, StepStatus.OBSERVED, observation, evidence_ids=evidence_ids))
                     continue
-                if step.kind in {"expect", "observe"}:
+                if step.kind == "observe":
+                    fresh = await adapter.observe(session)
+                    if not fresh:
+                        observation = RawObservation(status="unknown", error="adapter returned no observation")
+                        observation_event_id = self._record_event(
+                            run_id, step.step_id, "observation", observation.to_dict()
+                        )
+                        observations.append((step.step_id, observation))
+                        results.append(
+                            StepResult(
+                                step.step_id,
+                                StepStatus.UNKNOWN,
+                                observation,
+                                evidence_ids=(observation_event_id,),
+                            )
+                        )
+                        status = RunStatus.INCONCLUSIVE
+                        findings.append(
+                            self._finding(
+                                run_id,
+                                step.step_id,
+                                FindingKind.ADAPTER_ERROR,
+                                Severity.HIGH,
+                                "观察步骤没有得到结果",
+                                "adapter returned no observation",
+                            )
+                        )
+                        break
+                    last = fresh[-1]
+                    observation_event_id = self._record_event(
+                        run_id, step.step_id, "observation", last.to_dict()
+                    )
+                    observations.append((step.step_id, last))
+                    errors = _assert_observation(last, step.assertions)
+                    if errors:
+                        results.append(
+                            StepResult(
+                                step.step_id,
+                                StepStatus.FAILED,
+                                last,
+                                errors,
+                                (observation_event_id,),
+                            )
+                        )
+                        status = RunStatus.FAIL
+                        findings.append(
+                            self._finding(
+                                run_id,
+                                step.step_id,
+                                FindingKind.OUTCOME_FAILURE,
+                                Severity.HIGH,
+                                "客户观察结果断言失败",
+                                "; ".join(errors),
+                            )
+                        )
+                        break
+                    results.append(
+                        StepResult(
+                            step.step_id,
+                            StepStatus.VALIDATED,
+                            last,
+                            evidence_ids=(observation_event_id,),
+                        )
+                    )
+                    continue
+                if step.kind == "expect":
                     last = observations[-1][1] if observations else None
                     errors = _assert_observation(last, step.assertions)
                     if errors:
@@ -128,10 +194,11 @@ class CustomerSimulationRunner:
         self.ledger.append(f"{run_id}_settled", "test_run.status", run_id, run.to_dict())
         return run
 
-    def _record_event(self, run_id: str, step_id: str, direction: str, payload: Any) -> None:
+    def _record_event(self, run_id: str, step_id: str, direction: str, payload: Any) -> str:
         event_id = f"event_{uuid.uuid4().hex}"
         event = InteractionEvent(event_id, run_id, step_id, direction, payload, digest(payload))
         self.ledger.append(event_id, "interaction.event", run_id, event.to_dict())
+        return event_id
 
     @staticmethod
     def _finding(run_id: str, step_id: str | None, kind: FindingKind, severity: Severity, title: str, detail: str) -> Finding:

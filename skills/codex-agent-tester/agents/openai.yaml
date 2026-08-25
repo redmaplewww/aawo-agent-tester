@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Agent Tester"
+  short_description: "Codex SDK customer-simulation Agent tester"
+  default_prompt: "Use Codex Agent Tester to simulate a real customer, exercise an Agent, and report implementation gaps with evidence."

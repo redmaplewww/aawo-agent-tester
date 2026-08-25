@@ -5,10 +5,10 @@
 
 ## 当前验收结论
 
-- 结论：P0/P1 内核、Skill/真实应用入口、P2 AAWO Team Tree/Adaptive Workflow、单团队受控工作流演化纵切以及真实 LLM 提案连接验收通过；F-008 整体仍为进行中
-- 验收范围：标准库确定性内核、客户旅程与严格失败状态、纠正回归、Proposal fail-closed、五个 AAWO 权责 Department、Workflow 招聘、七角色 TeamExecutor、作用域 EvidenceRef、SQLite 参考 Store/Checkpoint、真实 LLM Workflow 提案、一次有界自校正、Team Owner fencing、ProductionControlPlane 审批和无批准拒绝
-- 最后检查：2026-08-08
-- 遗留问题：真实 LLM 领域质量、模型切换成本和长期回归、MCP/浏览器、跨团队 SOP 晋升、Team Optimizer 组织变更/补偿、contract/scenario/evaluator 注册表应用、生产副作用、远程 Store、多租户生产安全和跨进程恢复仍未实现或验证；本次真实 LLM 运行只生成提案，未自动应用；Yunpai 原 compose 依赖未启动，9000 通过的是隔离临时进程；目标项目有 1 个日期依赖测试失败
+- 结论：Codex SDK 架构迁移、真实 Codex fixture 客户式旅程生成、确定性执行、实现完整性检查、纠正/最小回归和 Skill 校验通过；没有真实目标 Agent 的业务结论，不能把本次结果写成领域质量或生产验收
+- 验收范围：`openai-codex==0.147.0` 只读 CodexReasoner、Callable/HTTP/CLI Adapter、CustomerSimulationRunner、SQLite Evidence Ledger、五个最低覆盖维度、失败/阻塞/未知/缺证据结算、Codex review evidence scope、用户纠正和最小回归
+- 最后检查：2026-08-25
+- 遗留问题：真实目标 Agent 仍需在用户提供边界和安全许可后实测；浏览器视觉、真实写操作、跨进程恢复和长期模型质量未验收；Codex SDK 本机登录态可用性因运行环境而异；本次只验证本地 fixture 与 SDK 边界，不代表任意领域普适质量
 
 ## 验收标准
 
@@ -33,6 +33,12 @@
 | A-017 | 金丝雀必须以独立 workflow revision composition 重新执行客户旅程，不能复用基线或以非执行变更伪造 | 通过 | adapter 两次调用、不同 TestRun ID；constraints-only 修改仅一次调用并冻结 | E-030,E-032 |
 | A-018 | 有害金丝雀不会晋升，且由 AAWO rollback 恢复已知基线并留下冻结记录 | 通过 | canary FAIL、control status frozen、workflow history rollback、active baseline restored | E-030 |
 | A-019 | 真实 LLM 能理解受限 Agent 上下文并只生成受治理 Workflow 提案 | 通过 | 受管 deepseek 配置真实调用；一次校正回合；Runner 基线 PASS 后 proposal received；无人工批准时 AAWO rejected，`applied=false`；wheel 全新 venv 回归 | E-033..E-037 |
+| A-020 | 官方 Codex SDK 是唯一模型运行时边界 | 通过 | `openai-codex==0.147.0` 安装/导入；CodexReasoner 只读沙箱、deny-all approval、ephemeral thread；无 Provider URL/API Key 入口 | E-038,E-039 |
+| A-021 | Codex 生成的客户旅程必须经过本地支持矩阵和 schema 校验 | 通过 | 缺步骤、缺覆盖、未知 step/assertion 和错误 JSON 均 blocked；合法计划才进入 Deterministic Runner | E-039 |
+| A-022 | 模拟真人测试覆盖真实客户路径而非无意义 ping/fuzz | 通过 | 五个最低维度：正常成功、无效/不完整输入、输出契约、失败恢复、重复输入/纠正；每个旅程包含 user_input 与 expect/observe | E-039 |
+| A-023 | 实现完整性检查不能静默补齐缺口 | 通过 | 缺覆盖为 incomplete，失败为 fail，blocked/unknown 或 Codex review 不确定为 inconclusive；无 evidence 的 finding 被拒绝 | E-039 |
+| A-024 | 用户纠正可驱动最小回归和受治理自校正 | 通过 | Correction supersession、CorrectionImpactAnalyzer、RegressionPlan 和 Codex proposal parser/governor 回归 | E-039 |
+| A-025 | 新 Skill 可校验、可安装并暴露 Codex 客户式测试工作流 | 通过 | `quick_validate.py`、wheel 构建、CLI demo/codex-status、17 项 pytest、Ruff、compileall | E-040 |
 
 ## 证据索引
 
@@ -76,6 +82,9 @@
 | E-035 | 2026-08-08 | AAWO source-backed `examples/aawo_real_llm_proposal_smoke.py`，Python 3.10 + supplied dev41 source | 0 | baseline `pass`、LLM proposal `received`、evolution `rejected`、`applied=false`、4 条 proposal evidence；Runner SHA256 `B34E3DFFF0EC0F0C03157FA87036360694C9AFB0F069CEE95E685D51DE59CA57`；example SHA256 `6FF16A6A643F28CD8B13D2C0BE068399D11370B7500E65FE5DB6FD68C1D4737E` | `examples/aawo_real_llm_proposal_smoke.py`、`src/aawo_agent_tester/aawo_runtime.py` | 无人工批准；只验证提案边界 |
 | E-036 | 2026-08-08 | AAWO source-backed `pytest -q`、compileall；变更文件 Ruff | 0 | 37 passed；compileall 通过；变更文件 Ruff All checks passed；runtime integration test SHA256 `D7958CB158E08E8518BC8E87D2701E19D49D1C721FFD32C7781C0E0E34214184`；P1 reasoning test SHA256 `9757BF45D38346C9EBB7E995D7CF19C27E6B1C88CEF65E798BF4361FCFA9DAFE` | `tests/`、`src/aawo_agent_tester/`、`examples/` | 当前源码版本；全仓最新 Ruff 仍有历史基线规则差异 |
 | E-037 | 2026-08-08 | `uv build --wheel --out-dir dist-llm-20260808`；全新 Python 3.10 venv 安装 supplied AAWO wheel + tester wheel；运行 AAWO real LLM smoke | 0 | wheel SHA256 `2BA05D7BAC6A5F61E181274B596E5BBABD89F4F0A86476B6B810935C07D7CA1E`；安装 `aawo=0.6.0.dev41`、`aawo-agent-tester=0.1.0.dev0`；baseline `pass`、proposal `received`、evolution `rejected`、`applied=false` | `dist-llm-20260808/aawo_agent_tester-0.1.0.dev0-py3-none-any.whl`；`F:\Codex\杂项Agent\.verify-llm-aawo-20260808` | 当前构建；无人工批准，真实 LLM 仅提案 |
+| E-038 | 2026-08-25 | `openai-codex==0.147.0` 安装；`PYTHONPATH=src; py -3.12 -m pytest -q`；Ruff；compileall；`codex-agent-tester demo`；`codex-status`；`pip wheel --no-deps --no-build-isolation` | 0 | 22 passed；Ruff All checks passed；compileall 通过；demo PASS；SDK status `ready/thread_started=true`；wheel `codex_agent_tester-0.1.0.dev0-py3-none-any.whl` SHA256 `79b225d694aab5a600ff6ef6732f7bf4f24a5be376934c2892c6f68e6b81b13e`，无 legacy package entries；新包命名 `codex_agent_tester`；旧编排源模块和入口已移除 | `src/codex_agent_tester/`、`dist-codex-20260825/`、`pyproject.toml`、`README.md` | 当前源码版本；不代表真实目标 Agent 质量 |
+| E-039 | 2026-08-25 | `tests/test_p1_correction_reasoning.py` CodexReasoner/CodexCustomerTester 回归 | 0 | 官方 SDK boundary fake、五维客户式旅程、事件 evidence ID、缺 failure_recovery 的完整性 `incomplete`、review 证据范围和纠正回归通过 | `tests/`、`src/codex_agent_tester/codex_tester.py`、`src/codex_agent_tester/reasoning.py` | 本地 deterministic fixture；无真实目标 Agent |
+| E-040 | 2026-08-25 | Skill Creator `quick_validate.py`（UTF-8）+ `examples/codex_customer_tester_smoke.py` 真实 Codex SDK fixture 回合 | 0 | Skill valid；5 个维度发现回合 + 5 个 Callable 客户旅程 + Codex review 完成；fixture 故意只返回 `processed:`，报告如实为 `fail`，保留 request/response evidence 和 5 条客户可见 finding；无外部写操作；SQLite 安全关闭 | `skills/codex-agent-tester/`、`examples/codex_customer_tester_smoke.py`、临时 SQLite | 真实 Codex 本机登录态；fixture 结果不代表任意领域 Agent |
 
 ## Gate 记录
 
@@ -88,11 +97,13 @@
 | G-005 | 2026-08-03 | P2 AAWO Team Tree/Adaptive Workflow vertical slice | supplied dev41 + tester source/wheel | 通过 | E-025,E-026,E-028 | 仅本地 SQLite 参考 Store；不覆盖自进化应用和生产写操作 |
 | G-006 | 2026-08-03 | P2 single-team controlled workflow evolution vertical slice | supplied dev41 + tester source/wheel | 通过 | E-029..E-032 | 仅单团队 Workflow Optimizer；不覆盖跨团队 SOP、Team Optimizer 组织变化、其他注册表应用、远程 Store 或生产写操作 |
 | G-007 | 2026-08-08 | real LLM proposal-only integration | managed deepseek profile + supplied dev41 source/wheel | 通过 | E-033..E-037 | 仅证明协议连接、受限上下文和拒绝边界；不证明领域质量，不自动应用模型输出 |
+| G-008 | 2026-08-25 | Codex SDK customer simulation and completeness gate | `codex_agent_tester` source + `openai-codex==0.147.0` + local fixtures | 通过 | E-038..E-040 | 仅证明 SDK 边界、客户式计划/执行/完整性结算和纠正回归；不证明真实目标 Agent 或生产副作用 |
 
 ## 验收记录
 
 按时间倒序追加：日期、检查范围、证据 ID、结果、遗留问题和结论。失败、跳过与过期证据也必须如实记录。
 
+- 2026-08-25：Codex SDK 架构迁移和核心能力验收通过。旧编排运行时、旧 Provider URL 和旧示例入口移除；`CodexReasoner` 只读、deny-all、ephemeral；`CodexCustomerTester` 以五个有界维度回合生成并校验客户旅程，确定性 Runner 记录 request/response/observation event evidence，浅层计划、缺覆盖、失败、未知、无证据和越权 review finding 均不判通过；22 项测试、Ruff、compileall、Skill quick_validate、CLI 和真实 Codex fixture smoke 通过。没有真实目标 Agent 业务结论，待用户提供目标后执行 F-017。证据：E-038..E-040。
 - 2026-08-08：真实 LLM 接入验收通过。受管 `deepseek` 配置完成真实 OpenAI-compatible 请求；首轮不合规字段被拒绝，单次校正回合后生成 Workflow 提案；AAWO Runner 在基线 PASS 后接收 proposal，无人工批准时记录 Approval/Control 边界并 rejected，`applied=false`；构建 wheel 在全新 Python 3.10 venv 中完成同样回归。证据 E-033..E-037；仅协议和治理边界通过，领域质量未验收。
 - 2026-08-03：P2 单团队受控工作流演化纵切验收通过。真实 dev41 Optimizer 通过 AgentServices 生成 WorkflowRevisionProposal；ProductionControlPlane 携 Team Owner token 完成人工审批/应用；不同 revision composition 重新执行客户旅程；非执行变更不能伪造金丝雀；有害结果冻结并由 AAWO rollback。权限 fencing 与 composition 复用暴露的失败记录为 E-029，成功证据为 E-030..E-032。F-008 整体仍进行中，不覆盖跨团队 SOP、Team Optimizer 和其余注册表。
 - 2026-08-03：P2 AAWO 运行时纵切验收通过。真实 dev41 完成五 Department 注册、Workflow 招聘、TeamExecutor 七角色树内执行、scope-bound EvidenceRef、Checkpoint 和 9 Agent 后序释放；被测结果 PASS/BLOCKED/FAIL 未被编排层改写。目录路由和 SQLite 句柄的中间失败记录为 E-024/E-027。远程 Store、生产副作用、多租户和自进化应用仍未验收。

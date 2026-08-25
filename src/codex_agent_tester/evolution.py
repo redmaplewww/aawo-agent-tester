@@ -1,8 +1,7 @@
 """Human-gated proposal records and deterministic canary settlement.
 
-This module never mutates an active tester registry or an AAWO runtime.  It
-owns only tester-domain proposals, operator intent and replayable comparison
-metrics.  AAWO's Optimizer and control plane remain the only application path.
+This module never mutates an active tester registry. It owns only tester-domain
+proposals, operator intent and replayable comparison metrics.
 """
 from __future__ import annotations
 
@@ -64,47 +63,6 @@ class EvolutionCanaryMetrics:
 
     def to_dict(self) -> dict[str, object]:
         return asdict(self) | {"accepted": self.accepted}
-
-
-@dataclass(frozen=True)
-class AAWOEvolutionResult:
-    """Detached governance receipt after AAWO has settled an evolution attempt."""
-
-    proposal_id: str
-    status: str
-    reason: str
-    aawo_proposal_id: str | None = None
-    approval_id: str | None = None
-    control_ledger_id: str | None = None
-    base_workflow_revision: int = 1
-    final_workflow_revision: int = 1
-    canary_run: TestRun | None = None
-    metrics: EvolutionCanaryMetrics | None = None
-    rolled_back: bool = False
-
-    def __post_init__(self) -> None:
-        if self.status not in {"rejected", "promoted", "frozen"}:
-            raise ValueError("unsupported AAWO evolution status")
-        if not self.proposal_id.strip() or not self.reason.strip():
-            raise ValueError("evolution result identity and reason are required")
-
-    def to_dict(self) -> dict[str, object]:
-        return {
-            "schema": "aawo.agent_test_evolution_result/v1",
-            "proposal_id": self.proposal_id,
-            "status": self.status,
-            "reason": self.reason,
-            "aawo_proposal_id": self.aawo_proposal_id,
-            "approval_id": self.approval_id,
-            "control_ledger_id": self.control_ledger_id,
-            "base_workflow_revision": self.base_workflow_revision,
-            "final_workflow_revision": self.final_workflow_revision,
-            "canary_run": (
-                self.canary_run.to_dict() if self.canary_run is not None else None
-            ),
-            "metrics": self.metrics.to_dict() if self.metrics is not None else None,
-            "rolled_back": self.rolled_back,
-        }
 
 
 def evaluate_evolution_canary(

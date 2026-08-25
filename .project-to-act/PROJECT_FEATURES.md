@@ -21,20 +21,24 @@
 | F-004 | Evidence Ledger | P0 | 已完成 | F-002,F-003 | SQLite 持久化原始交互、哈希、结论和失败状态，禁止覆盖 | E-002 |
 | F-005 | 契约/结果/摩擦审查 | P0 | 已完成 | F-003,F-004 | 识别结构违约、目标未完成、阻塞和基础反人类操作 | E-002 |
 | F-006 | 用户纠正与最小回归 | P1 | 已完成 | F-001,F-004 | 旧假设 supersede，新 Run 可解释变化 | E-010 |
-| F-007 | AAWO 能力池/团队适配 | P1 | 已完成 | F-001..F-005 | 通过 AAWO 公共 API 注册测试蓝图，不修改 AAWO 内核 | E-009 |
-| F-008 | 受控质量自进化 | P2 | 进行中 | F-006,F-007,F-014 | 提案、审批、灰度、指标、回滚和有害结果冻结 | E-029,E-030,E-031,E-032（单团队工作流纵切） |
-| F-009 | 可选推理 Provider 与 Proposal 解析 | P1 | 已完成 | F-001,F-004 | OpenAI-compatible 接口只产出 EvolutionProposal；真实受管配置可接入；缺字段、缺证据或高风险无人工批准均 fail-closed | E-010,E-011,E-012,E-013,E-014,E-033,E-034,E-035,E-037 |
+| F-007 | 旧编排能力池/团队适配 | P1 | 已取消 | F-001..F-005 | 旧路线已退出；不再安装、调用或复制旧编排运行时 | E-038 |
+| F-008 | 用户纠正驱动的受控自校正 | P2 | 已完成 | F-006,F-009,F-016 | 纠正形成 supersession、最小回归和受治理提案；Codex 可在一次有界校正中修正格式，不能自动改写结论或越过人工门禁 | E-010,E-038,E-039 |
+| F-009 | Codex SDK 推理边界与 Proposal 解析 | P1 | 已完成 | F-001,F-004 | 官方 `openai-codex` 只生成本地可解析结果；无 API Key/URL 配置；缺字段、缺证据或越权输出 fail-closed | E-010,E-039 |
 | F-010 | 异步 Job、Fixture 和副作用门禁 | P1 | 已完成 | F-002,F-003 | submit/poll 未知结果不自动取消；Fixture 可重置；读场景阻止写 Adapter | E-015,E-016 |
 | F-011 | 真实应用只读适配器 smoke | P1 | 已完成 | F-002,F-003,F-004 | 通过真实 ResumeProbe FastAPI 应用的健康路由完成客户式只读旅程并保留证据 | E-017,E-018 |
-| F-012 | AAWO Agent Tester Skill | P1 | 已完成 | F-001..F-010 | 可发现 Skill、HTTP Journey Runner、结构化断言和标准化报告通过校验并完成真实目标测试 | E-019,E-020 |
-| F-013 | 两个真实 Agent 黑盒实测 | P1 | 已完成 | F-012 | 8000 真实 M8 服务和 Yunpai Orchestrator 9000 隔离启动入口均按客户式只读/安全旅程留下 pass、fail、inconclusive 证据 | E-020,E-021,E-022 |
-| F-014 | AAWO 多部门 Team Tree 与 Adaptive Workflow 纵切 | P2 | 已完成 | F-003,F-004,F-007,F-010 | 真实 AAWO dev41 形成多部门测试团队和 Team Tree；Customer Journey 投影为独立 Adaptive Workflow；角色结果经 AAWO State/Transfer/Checkpoint 收束；原始失败状态保持不变 | E-025,E-026,E-028 |
+| F-012 | Codex Agent Tester Skill | P1 | 已完成 | F-001..F-010,F-015,F-016 | 可发现 Skill、Codex SDK 边界、客户式旅程、结构化证据报告通过校验 | E-038,E-040 |
+| F-013 | 旧路线真实 Agent 黑盒实测 | P1 | 已取消 | F-012 | 旧 Skill/编排路线的历史实测保留在验收记录；切换后需按 Codex SDK 重新建立新鲜证据 | E-038 |
+| F-014 | 旧多部门 Team Tree 与 Adaptive Workflow 纵切 | P2 | 已取消 | F-003,F-004,F-007,F-010 | 旧编排集成已退出；Customer Journey、证据和失败结算保留在独立内核 | E-038 |
+| F-015 | Codex 客户式测试计划生成 | P1 | 已完成 | F-001..F-005,F-009 | Codex 为陌生 Agent 生成真实客户旅程；支持矩阵、输入步骤、断言和副作用策略均由本地解析并 fail-closed | E-038,E-039 |
+| F-016 | Agent 实现完整性检查 | P1 | 已完成 | F-003,F-004,F-009,F-015 | 覆盖正常成功、无效/不完整输入、输出契约、失败恢复、重复输入/纠正五个最低维度；缺覆盖、未知结果和无证据不判通过 | E-038,E-039 |
+| F-017 | 真实目标 Agent Codex 回归 | P1 | 已规划 | F-012,F-015,F-016 | 在用户提供目标边界和安全许可后，以 Codex 计划驱动真实 HTTP/CLI/Callable 客户旅程并生成可审计缺陷报告 | 待定 |
 
 ## 功能变更历史
 
 按时间倒序追加：日期、功能 ID、变化、原因、影响、证据 ID 和确认来源。
 
 - 2026-08-08：F-009 增加真实 LLM 接入。通过 llm-api-config 管理的 `deepseek` 配置读取通用环境变量，`ReasoningProvider` 在基线客户旅程后接收 Agent 契约、旅程、证据摘要和用户纠正，最多做一次确定性校验反馈重试；Runner 将成功提案送入 AAWO，未人工批准时明确 rejected。真实模型质量仍未验收。证据：E-033..E-036。
+- 2026-08-25：F-007/F-008/F-014 标记已取消，旧编排运行时和集成入口移除；F-009 切换为官方 `openai-codex` SDK；新增 F-015/F-016，分别覆盖 Codex 客户式旅程生成和实现完整性检查。证据：E-038..E-040。
 - 2026-08-03：F-008 完成单团队 Workflow Optimizer 受控演化纵切，但整体仍为进行中。真实 dev41 Optimizer 通过 AgentServices 提案，ProductionControlPlane 在 Team Owner fencing 下审批/应用；revision-isolated TeamExecutor 真实重跑客户旅程，约束-only 修改不能伪造金丝雀，有害结果冻结并由 AAWO 回滚。尚缺跨团队 SOP、Team Optimizer 组织变更/补偿和 contract/scenario/evaluator 注册表应用。证据：E-029..E-032。
 - 2026-08-03：F-014 完成；五个权责 Department、一个可执行 Adaptive Workflow 节点、TeamExecutor 七角色责任树、作用域 EvidenceRef、Checkpoint 和显式 IDLE 释放通过真实 dev41 集成与干净 wheel smoke。E-024/E-027 保留了目录契约和资源关闭的中间失败，最终证据为 E-025,E-026,E-028。
 - 2026-07-31：F-006、F-009 完成 P1 实现与回归；F-001..F-005 完成 P0 验收；F-007 完成 AAWO DepartmentPool 注册桥接 smoke。证据：E-002..E-014。

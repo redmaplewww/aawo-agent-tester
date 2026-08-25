@@ -229,6 +229,7 @@ class CustomerJourney:
     source: str = "customer_trace"
     revision: int = 1
     evidence_ids: tuple[str, ...] = ()
+    coverage_dimensions: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if not self.scenario_id.strip() or not self.goal.strip() or not self.steps:
@@ -241,6 +242,7 @@ class CustomerJourney:
         data["steps"] = [step.to_dict() for step in self.steps]
         data["preconditions"] = list(self.preconditions)
         data["evidence_ids"] = list(self.evidence_ids)
+        data["coverage_dimensions"] = list(self.coverage_dimensions)
         return data
 
 

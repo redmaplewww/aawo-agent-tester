@@ -1,21 +1,10 @@
-"""Evidence-first Agent understanding and customer simulation testing."""
+"""Evidence-first Agent understanding and customer simulation testing.
 
-from .aawo_compat import (
-    TesterBlueprint,
-    build_aawo_department_dict,
-    build_aawo_department_dicts,
-    default_test_blueprints,
-    register_departments_with_aawo,
-    register_with_aawo,
-)
-from .aawo_runtime import (
-    AAWORuntimeUnavailable,
-    AAWOTestTeamResult,
-    AAWOTestTeamRunner,
-    aawo_test_team_spec_data,
-    journey_to_aawo_workflow_data,
-    require_aawo_runtime,
-)
+The package is independent of any orchestration framework. Codex is an
+optional reasoning/exploration boundary; adapters, runner, validators and the
+ledger remain deterministic and can run without a model session.
+"""
+
 from .adapters import (
     AdapterDescription,
     AsyncJobAdapter,
@@ -25,14 +14,21 @@ from .adapters import (
     SessionContext,
     UnderTestAdapter,
 )
-from .environment import FixtureEnvironment
-from .evolution import (
-    AAWOEvolutionResult,
-    EvolutionApproval,
-    EvolutionCanaryMetrics,
-    EvolutionGovernor,
-    evaluate_evolution_canary,
+from .codex_tester import (
+    DISCOVERY_PLAN_SCHEMA,
+    MINIMUM_COVERAGE,
+    REVIEW_SCHEMA,
+    CodexCustomerTester,
+    CodexReview,
+    CodexTestPlan,
+    CodexTestReport,
+    CoverageResult as CodexCoverageResult,
+    build_dimension_messages,
+    build_discovery_messages,
+    build_review_messages,
 )
+from .environment import FixtureEnvironment
+from .evolution import EvolutionApproval, EvolutionCanaryMetrics, EvolutionGovernor, evaluate_evolution_canary
 from .ledger import EvidenceLedger
 from .models import (
     AgentContractProfile,
@@ -56,12 +52,11 @@ from .models import (
 )
 from .reasoning import (
     PROPOSAL_RESPONSE_SCHEMA,
-    OpenAICompatibleReasoner,
+    CodexReasoner,
     ReasoningProvider,
     ReasoningProviderError,
     ReasoningResponse,
     build_proposal_messages,
-    load_managed_env,
     proposal_from_response,
 )
 from .regression import CorrectionImpactAnalyzer
@@ -70,20 +65,23 @@ from .understanding import UnderstandingEngine
 
 __all__ = [
     "PROPOSAL_RESPONSE_SCHEMA",
-    "AAWOEvolutionResult",
-    "AAWORuntimeUnavailable",
-    "AAWOTestTeamResult",
-    "AAWOTestTeamRunner",
     "AdapterDescription",
     "AgentContractProfile",
     "AsyncJobAdapter",
     "CallableAdapter",
     "CliAdapter",
+    "CodexCoverageResult",
+    "CodexCustomerTester",
+    "CodexReasoner",
+    "CodexReview",
+    "CodexTestPlan",
+    "CodexTestReport",
     "ContractHypothesis",
     "Correction",
     "CorrectionImpactAnalyzer",
     "CustomerJourney",
     "CustomerSimulationRunner",
+    "DISCOVERY_PLAN_SCHEMA",
     "EvidenceLedger",
     "EvidenceLevel",
     "EvidenceRef",
@@ -97,31 +95,25 @@ __all__ = [
     "FixtureEnvironment",
     "HttpAdapter",
     "JourneyStep",
-    "OpenAICompatibleReasoner",
+    "MINIMUM_COVERAGE",
     "RawObservation",
     "ReasoningProvider",
     "ReasoningProviderError",
     "ReasoningResponse",
     "RegressionPlan",
+    "REVIEW_SCHEMA",
     "RunStatus",
     "SessionContext",
     "Severity",
     "StepResult",
     "StepStatus",
     "TestRun",
-    "TesterBlueprint",
     "UnderTestAdapter",
     "UnderstandingEngine",
-    "aawo_test_team_spec_data",
-    "build_aawo_department_dict",
-    "build_aawo_department_dicts",
+    "build_discovery_messages",
+    "build_dimension_messages",
     "build_proposal_messages",
-    "default_test_blueprints",
+    "build_review_messages",
     "evaluate_evolution_canary",
-    "journey_to_aawo_workflow_data",
-    "load_managed_env",
     "proposal_from_response",
-    "register_departments_with_aawo",
-    "register_with_aawo",
-    "require_aawo_runtime",
 ]

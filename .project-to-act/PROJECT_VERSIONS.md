@@ -6,18 +6,19 @@
 
 - 版本号：`0.1.0.dev0`
 - 发布状态：开发中，未发布
-- 兼容性说明：确定性内核支持 Python 3.10+；AAWO 编排为可选依赖并严格锁定 `aawo==0.6.0.dev41`
-- 最后更新：2026-08-08
+- 兼容性说明：确定性内核支持 Python 3.10+；唯一模型运行时依赖为 `openai-codex==0.147.0`，通过本机 Codex 登录态运行；不再依赖旧编排包或 Provider URL
+- 最后更新：2026-08-25
 
 ## 下一版本计划
 
-- 目标版本：尚未定义
-- 计划内容：跨团队 SOPRegistry 晋升、Team Optimizer 组织变更/补偿与其余演化注册表应用
-- 发布条件：上述范围完成验收，且远程 Store/恢复与生产副作用边界形成明确 Gate
+- 目标版本：`0.2.0.dev0`
+- 计划内容：真实目标 Agent 的 Codex 客户式回归、页面/流程摩擦证据和用户纠正回归
+- 发布条件：真实目标边界、五类最低覆盖、Codex 计划质量、证据报告和副作用 Gate 完成新鲜验收
 
 ## 版本历史
 
 按时间倒序追加：版本号、日期、状态、主要变更、原因、兼容性、证据 ID 和 Gate 结果。
 
-- `0.1.0.dev0`｜2026-08-08｜开发中、未发布｜增加 llm-api-config 受管真实 LLM 提案接入、一次有界校正和 AAWO Runner proposal-only 边界，并完成新 wheel/全新 venv 回归｜兼容 Python 3.10+，可选依赖严格锁定 AAWO 0.6.0.dev41；不代表领域质量或生产发布｜E-033..E-037｜G-007 通过
+- `0.1.0.dev0`｜2026-08-25｜开发中、未发布｜全面切换到官方 `openai-codex` SDK；重命名为 `codex_agent_tester`；增加 Codex 客户式测试计划、五维完整性检查、交互证据回填、Codex review scope 和 Codex Agent Tester Skill｜兼容 Python 3.10+；不代表真实目标 Agent 领域质量或生产写操作｜E-038..E-040｜G-008 通过
+- `0.1.0.dev0`｜2026-08-08｜历史路线、已退出｜增加 llm-api-config 受管真实 LLM 提案接入、一次有界校正和旧控制面 proposal-only 边界｜历史兼容 Python 3.10+，不再作为当前安装依赖｜E-033..E-037｜旧 G-007；由 G-008 替代
 - `0.1.0.dev0`｜2026-08-03｜开发中、未发布｜同步 `pyproject.toml` 中既有版本事实；完成 AAWO dev41 Team Tree/Adaptive Workflow 与单团队受控工作流演化纵切｜兼容 Python 3.10+，可选依赖严格锁定 AAWO 0.6.0.dev41｜E-025..E-032｜G-005/G-006 通过，均不代表生产发布

@@ -1,43 +1,43 @@
-# AAWO Agent Tester
+# Codex Agent Tester
 
-面向任意领域 Agent 的“模拟人工客户”测试 Agent。它先理解被测 Agent 的输入、输出、契约和用户目标，再按客户旅程执行；不会把跑不通的步骤悄悄走通，也不会把模型自评当作通过。
+面向任意领域 Agent 的“模拟真实客户”测试器。它先用 Codex SDK 理解输入、输出、客户目标和能力声明，再按真实客户旅程执行；跑不通的地方会保留为失败、阻塞或未知，不会被测试器悄悄走通。
 
 ## 核心能力
 
-- Callable、HTTP 和 CLI Adapter
-- Agent Contract Profile 与 JSON Schema 子集校验
-- 客户旅程逐步执行、纠正、supersession 和最小回归
-- SQLite 追加式 Evidence Ledger
-- `PASS / FAIL / BLOCKED / INCONCLUSIVE / NEEDS_HUMAN` fail-closed 结论
-- 基础客户摩擦识别：无反馈、反人类流程、假成功和副作用风险
-- 可选 OpenAI-compatible LLM：只生成受限 EvolutionProposal，不直接修改测试基线
-- 可选 AAWO 0.6.0.dev41 Team Tree、Workflow、Checkpoint 和人工审批边界
+- Codex thread 驱动的 Agent 契约发现、客户旅程规划和证据复核；
+- Callable、HTTP、CLI 和 Async Job Adapter；
+- JSON Schema 子集、业务断言、客户摩擦和反人类流程识别；
+- SQLite 追加式 Evidence Ledger，原始请求/响应和失败不可覆盖；
+- `PASS / FAIL / BLOCKED / INCONCLUSIVE` fail-closed 结论；
+- 实现完整性检查：正常成功、异常输入、输出契约、失败恢复、重复输入/纠正和用户声明能力覆盖；
+- 用户纠正后的 Profile supersession、最小回归和独立新 Run；
+- Codex 只做理解和复核，不能直接执行目标写操作、修改基线或把模型自评当作通过。
 
-## 快速开始
+## 安装和验证
 
 ```powershell
-uv sync --dev
+py -3.12 -m pip install -e .
 $env:PYTHONPATH = "src"
-uv run pytest -q
-uv run python -m compileall -q src tests examples
-uv run ruff check src tests examples
-uv run python -m aawo_agent_tester.cli demo
+py -3.12 -m pytest -q
+py -3.12 -m compileall -q src tests examples
+codex-agent-tester demo
+codex-agent-tester codex-status
 ```
 
-安装可选 AAWO 适配：
+`openai-codex==0.147.0` 是唯一的模型运行时依赖。Codex SDK 复用本机 Codex 登录态；项目不读取或保存 API Key，也不再使用 AAWO 或 OpenAI-compatible Chat Completions。
+
+## 真实客户仿真
 
 ```powershell
-uv sync --extra aawo
+$env:PYTHONPATH = "src"
+py -3.12 examples\codex_customer_tester_smoke.py
 ```
 
-真实 LLM 配置请使用本机的受管 `llm-api-config` profile；不要把 API Key 写入命令行、源码、日志或 Git。
+目标 Agent 可以替换为 `HttpAdapter`、`CliAdapter` 或真实的 Callable 边界。真实生产写操作默认不允许，未知结果不会自动重试或判定为成功。
 
-## 设计边界
+## 文档
 
-测试内核负责领域无关的契约、客户旅程、证据和纠正语义；AAWO 只承担组织树、工作流、作用域证据、Checkpoint 和受控生命周期。真实外部写操作、生产 IAM、远程 Store 和模型质量仍需要独立验收。
+- [完整能力说明](CODEX_AGENT_TESTER_README.md)
+- [技术方案](CODEX_AGENT_TESTER_TECHNICAL_PLAN.md)
 
-更完整的能力说明见 [AAWO Agent Tester README](AAWO_AGENT_TESTER_README.md) 和 [技术方案](AAWO_AGENT_UNDERSTANDING_TESTER_TECHNICAL_PLAN.md)。
-
-## 许可证与发布
-
-项目当前为开发版本，AAWO 依赖为可选依赖。发布前请根据实际授权补充许可证和依赖声明。
+当前仓库只包含 Codex SDK 路线；历史 AAWO 适配器和运行时已移除。

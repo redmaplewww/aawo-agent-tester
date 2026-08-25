@@ -14,7 +14,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from aawo_agent_tester import (
+from codex_agent_tester import (
     AgentContractProfile,
     CallableAdapter,
     CustomerJourney,

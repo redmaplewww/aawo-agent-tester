@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from aawo_agent_tester.friction import find_friction
-from aawo_agent_tester.models import FindingKind, JourneyStep, RawObservation
-from aawo_agent_tester.schema import infer_schema, validate
+from codex_agent_tester.friction import find_friction
+from codex_agent_tester.models import FindingKind, JourneyStep, RawObservation
+from codex_agent_tester.schema import infer_schema, validate
 
 
 def test_schema_validator_is_fail_closed_for_required_and_type():

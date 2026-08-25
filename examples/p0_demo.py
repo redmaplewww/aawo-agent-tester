@@ -4,7 +4,7 @@ from __future__ import annotations
 import asyncio
 import json
 
-from aawo_agent_tester import AgentContractProfile, CallableAdapter, CustomerJourney, CustomerSimulationRunner, EvidenceLedger, JourneyStep
+from codex_agent_tester import AgentContractProfile, CallableAdapter, CustomerJourney, CustomerSimulationRunner, EvidenceLedger, JourneyStep
 
 
 async def main() -> None:

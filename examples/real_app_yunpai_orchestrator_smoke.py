@@ -11,7 +11,7 @@ from typing import Any
 
 from httpx import ASGITransport, AsyncClient
 
-from aawo_agent_tester import (
+from codex_agent_tester import (
     AgentContractProfile,
     CallableAdapter,
     CustomerJourney,
