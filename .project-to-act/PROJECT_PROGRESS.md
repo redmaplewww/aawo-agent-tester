@@ -37,6 +37,7 @@
 按时间倒序追加：日期、完成事项、证据 ID、遗留问题、下一步和确认来源。不要覆盖旧记录。
 
 - 2026-08-08：完成真实 LLM 到人工控制面提案边界的接入。`deepseek-v4-flash` 真实请求成功生成 Workflow proposal；首轮非合规输出被确定性解析器拒绝，并在一次校正回合后成功；端到端 Runner 基线 PASS、LLM proposal received、无人工审批时 evolution rejected、未自动应用；新 wheel 在全新 venv 中安装并完成同样的 LLM smoke。37 项旧路线源码测试、compileall 和变更文件 Ruff 通过。证据：E-033..E-037。真实模型领域质量、成本和长期回归仍待验证。
+- 2026-09-05：完成 Codex SDK 产品命名与公开交付清理。GitHub 仓库改名为 `codex-agent-tester` 并设为 public，旧分支删除；当前 tracked tree 不再含旧架构命名，22 项 pytest、Ruff、compileall 和项目账本校验通过。证据：E-041。
 - 2026-08-25：按用户最新要求切换到官方 Codex SDK。新 `CodexReasoner` 使用本地 Codex 登录态、只读沙箱和 deny-all approval；真实 SDK 采用五个有界维度回合生成客户旅程，经过本地 schema/支持矩阵和浅层语义校验后由 Callable/HTTP/CLI Runner 执行，并对五个最低维度做实现完整性检查。增加真实交互 request/response/observation event evidence ID、Codex review evidence scope、越权 finding 拦截和缺覆盖/inconclusive/fail-closed 结算。22 项测试、Ruff、compileall、Skill quick_validate、CLI smoke 和真实 Codex fixture smoke 通过；fixture 的五条失败均如实保留，没有伪造 PASS。无真实目标 Agent 业务结论。证据：E-038..E-040。
 - 2026-08-03：完成 F-008 的单团队受控工作流演化纵切。旧 Optimizer/AgentServices/ProductionControlPlane/Owner fencing 串成审批链；基线与金丝雀使用不同 workflow revision composition，必须重新执行客户旅程；无执行节点变更时不允许伪造金丝雀；有害结果写入冻结控制事件并回滚恢复基线。33 项旧路线源码测试、Ruff、compileall、wheel 构建和干净双 wheel 新旧 smoke 通过。证据：E-029..E-032。F-008 后续不再属于当前产品。
 - 2026-08-03：完成 F-014 P2 纵切。旧运行时形成五个权责 Department、Workflow 招聘的 Test Director 和七角色执行树；PASS/BLOCKED/FAIL 均保持原结论，写能力在只读旅程中零调用；7 个 EvidenceRef 均绑定同一 scope；工作流 receipt 闭合并按 9 个 Agent 后序显式释放。28 项旧路线 pytest、Ruff、compileall、项目账本校验、wheel 构建和干净双 wheel smoke 通过。证据：E-024..E-028。该纵切已退出当前产品。

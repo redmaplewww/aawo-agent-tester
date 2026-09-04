@@ -7,7 +7,7 @@
 
 - 结论：Codex SDK 架构迁移、真实 Codex fixture 客户式旅程生成、确定性执行、实现完整性检查、纠正/最小回归和 Skill 校验通过；没有真实目标 Agent 的业务结论，不能把本次结果写成领域质量或生产验收
 - 验收范围：`openai-codex==0.147.0` 只读 CodexReasoner、Callable/HTTP/CLI Adapter、CustomerSimulationRunner、SQLite Evidence Ledger、五个最低覆盖维度、失败/阻塞/未知/缺证据结算、Codex review evidence scope、用户纠正和最小回归
-- 最后检查：2026-08-25
+- 最后检查：2026-09-05
 - 遗留问题：真实目标 Agent 仍需在用户提供边界和安全许可后实测；浏览器视觉、真实写操作、跨进程恢复和长期模型质量未验收；Codex SDK 本机登录态可用性因运行环境而异；本次只验证本地 fixture 与 SDK 边界，不代表任意领域普适质量
 
 ## 验收标准
@@ -38,7 +38,8 @@
 | A-022 | 模拟真人测试覆盖真实客户路径而非无意义 ping/fuzz | 通过 | 五个最低维度：正常成功、无效/不完整输入、输出契约、失败恢复、重复输入/纠正；每个旅程包含 user_input 与 expect/observe | E-039 |
 | A-023 | 实现完整性检查不能静默补齐缺口 | 通过 | 缺覆盖为 incomplete，失败为 fail，blocked/unknown 或 Codex review 不确定为 inconclusive；无 evidence 的 finding 被拒绝 | E-039 |
 | A-024 | 用户纠正可驱动最小回归和受治理自校正 | 通过 | Correction supersession、CorrectionImpactAnalyzer、RegressionPlan 和 Codex proposal parser/governor 回归 | E-039 |
-| A-025 | 新 Skill 可校验、可安装并暴露 Codex 客户式测试工作流 | 通过 | `quick_validate.py`、wheel 构建、CLI demo/codex-status、17 项 pytest、Ruff、compileall | E-040 |
+| A-025 | 新 Skill 可校验、可安装并暴露 Codex 客户式测试工作流 | 通过 | `quick_validate.py`、wheel 构建、CLI demo/codex-status、22 项 pytest、Ruff、compileall | E-040 |
+| A-026 | 当前 GitHub 仓库命名、可见性和主分支与 Codex SDK 产品路线一致 | 通过 | `gh repo view`、public visibility、`main` branch、旧分支删除、源码残留扫描 | E-041 |
 
 ## 证据索引
 
@@ -85,6 +86,7 @@
 | E-038 | 2026-08-25 | `openai-codex==0.147.0` 安装；`PYTHONPATH=src; py -3.12 -m pytest -q`；Ruff；compileall；`codex-agent-tester demo`；`codex-status`；`pip wheel --no-deps --no-build-isolation` | 0 | 22 passed；Ruff All checks passed；compileall 通过；demo PASS；SDK status `ready/thread_started=true`；wheel `codex_agent_tester-0.1.0.dev0-py3-none-any.whl` SHA256 `79b225d694aab5a600ff6ef6732f7bf4f24a5be376934c2892c6f68e6b81b13e`，无 legacy package entries；新包命名 `codex_agent_tester`；旧编排源模块和入口已移除 | `src/codex_agent_tester/`、`dist-codex-20260825/`、`pyproject.toml`、`README.md` | 当前源码版本；不代表真实目标 Agent 质量 |
 | E-039 | 2026-08-25 | `tests/test_p1_correction_reasoning.py` CodexReasoner/CodexCustomerTester 回归 | 0 | 官方 SDK boundary fake、五维客户式旅程、事件 evidence ID、缺 failure_recovery 的完整性 `incomplete`、review 证据范围和纠正回归通过 | `tests/`、`src/codex_agent_tester/codex_tester.py`、`src/codex_agent_tester/reasoning.py` | 本地 deterministic fixture；无真实目标 Agent |
 | E-040 | 2026-08-25 | Skill Creator `quick_validate.py`（UTF-8）+ `examples/codex_customer_tester_smoke.py` 真实 Codex SDK fixture 回合 | 0 | Skill valid；5 个维度发现回合 + 5 个 Callable 客户旅程 + Codex review 完成；fixture 故意只返回 `processed:`，报告如实为 `fail`，保留 request/response evidence 和 5 条客户可见 finding；无外部写操作；SQLite 安全关闭 | `skills/codex-agent-tester/`、`examples/codex_customer_tester_smoke.py`、临时 SQLite | 真实 Codex 本机登录态；fixture 结果不代表任意领域 Agent |
+| E-041 | 2026-09-05 | GitHub 仓库重命名、public 可见性、主分支推送、旧分支删除、源码/配置残留扫描与回归测试 | 0 | 仓库 `redmaplewww/codex-agent-tester` 为 PUBLIC；`main` 最新提交 `f00f1b78fbe01af37873b6d234af90ebe52a92f3`；旧分支已删除；tracked tree 无旧架构命名；22 项 pytest、Ruff、compileall 通过 | `https://github.com/redmaplewww/codex-agent-tester`、当前源码和 GitHub API | 当前公开交付；未纳入未跟踪目录 |
 
 ## Gate 记录
 
@@ -103,6 +105,7 @@
 
 按时间倒序追加：日期、检查范围、证据 ID、结果、遗留问题和结论。失败、跳过与过期证据也必须如实记录。
 
+- 2026-09-05：完成 Codex SDK 产品命名与公开交付清理。GitHub 仓库改名为 `codex-agent-tester` 并设为 public，旧分支删除；当前 tracked tree 不再含旧架构命名，22 项 pytest、Ruff、compileall 和项目账本校验通过。证据：E-041。
 - 2026-08-25：Codex SDK 架构迁移和核心能力验收通过。旧编排运行时、旧 Provider URL 和旧示例入口移除；`CodexReasoner` 只读、deny-all、ephemeral；`CodexCustomerTester` 以五个有界维度回合生成并校验客户旅程，确定性 Runner 记录 request/response/observation event evidence，浅层计划、缺覆盖、失败、未知、无证据和越权 review finding 均不判通过；22 项测试、Ruff、compileall、Skill quick_validate、CLI 和真实 Codex fixture smoke 通过。没有真实目标 Agent 业务结论，待用户提供目标后执行 F-017。证据：E-038..E-040。
 - 2026-08-08：旧路线真实 LLM 接入验收通过。受管 `deepseek` 配置完成真实 OpenAI-compatible 请求；首轮不合规字段被拒绝，单次校正回合后生成 Workflow 提案；旧 Runner 在基线 PASS 后接收 proposal，无人工批准时记录控制边界并 rejected，`applied=false`；构建 wheel 在全新 Python 3.10 venv 中完成同样回归。证据 E-033..E-037；仅协议和治理边界通过，领域质量未验收。
 - 2026-08-03：P2 单团队受控工作流演化纵切验收通过。旧 Optimizer 通过 AgentServices 生成 WorkflowRevisionProposal；旧 ProductionControlPlane 携 Owner token 完成人工审批/应用；不同 revision composition 重新执行客户旅程；非执行变更不能伪造金丝雀；有害结果冻结并回滚。权限 fencing 与 composition 复用暴露的失败记录为 E-029，成功证据为 E-030..E-032。该路线已退出当前产品。
