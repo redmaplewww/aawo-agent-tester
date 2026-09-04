@@ -11,8 +11,9 @@ and `CustomerSimulationRunner` as the deterministic execution authority.
 ## Operating rules
 
 1. Identify the exact Agent boundary and the customer's goal before planning.
-2. Use the official `openai-codex` Python SDK. Do not fall back to AAWO,
-   OpenAI-compatible Chat Completions, random fuzzing, or a health-only ping.
+2. Use the official `openai-codex` Python SDK. Do not fall back to another
+   orchestration runtime, OpenAI-compatible Chat Completions, random fuzzing,
+   or a health-only ping.
 3. Let one read-only, deny-all Codex thread discover the contract and produce
    customer journeys. Reject malformed plans, unknown step kinds and unknown
    assertions; never silently rewrite them.

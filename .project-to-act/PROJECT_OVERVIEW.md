@@ -68,8 +68,8 @@
 
 按时间倒序追加：决定 ID、日期、决定、原因、影响、证据 ID、确认来源和复审条件。
 
-- D-004｜2026-08-08｜使用 llm-api-config 的受管 `deepseek` 配置接入真实 OpenAI-compatible LLM；真实模型只在基线客户旅程后生成 Workflow 提案，确定性校验失败最多自动纠正一次，提案仍必须进入 AAWO ProductionControlPlane，未人工批准不得应用｜让模型具备真实 Agent 契约/旅程/证据理解入口，同时保留 fail-closed 和 AAWO 权限事实源｜E-033..E-037｜用户明确要求使用 LLM skill 接入真实 LLM｜完成领域质量回归和模型切换前复审数据范围、成本和证据脱敏
+- D-004｜2026-08-08｜使用受管 Provider 配置接入外部 LLM；真实模型只在基线客户旅程后生成 Workflow 提案，确定性校验失败最多自动纠正一次，提案仍必须经过人工控制面，未人工批准不得应用｜让模型具备真实 Agent 契约/旅程/证据理解入口，同时保留 fail-closed 权限边界｜E-033..E-037｜用户明确要求使用 LLM skill 接入真实 LLM｜完成领域质量回归和模型切换前复审数据范围、成本和证据脱敏
 - D-005｜2026-08-25｜全面切换到官方 `openai-codex` SDK；移除旧编排运行时、旧 Provider URL 和旧集成入口，保留客户式模拟测试、反人类操作识别、实现完整性检查、用户纠正和证据账本｜用户明确要求不再使用旧架构，核心价值是替客户测试 Agent 并找出真实问题；Codex 仅做理解/规划/复核，确定性 Runner 仍是事实源｜E-038..E-040｜用户最新指令｜接入真实目标 Agent 前复审 Codex 计划质量、拒绝写操作和证据脱敏
-- D-003｜2026-08-03｜F-008 先交付单团队 Workflow Optimizer 纵切：Optimizer 仅提案，ProductionControlPlane 携 Team Owner fencing 审批和应用，独立 revision composition 重跑真实客户旅程，确定性指标决定保留或调用 AAWO rollback；其余提案类型在存在真实注册表应用路径前保持 proposal-only｜防止模型自评、复用旧结果或本地影子状态伪装成 AAWO 自进化｜E-029..E-032｜用户要求严格依照 AAWO 设计继续开发｜接入跨团队 SOP/Team Optimizer 或任一新注册表应用类型前复审权限、金丝雀与补偿边界
-- D-002｜2026-08-03｜保留 AgentContractProfile、CustomerJourney、Finding、Correction 等测试领域模型；能力池、Team Tree、Adaptive Workflow、作用域 EvidenceRef、Store/Checkpoint 和优化应用不得在测试包内复制，统一通过 AAWO 公共 API 接入｜避免双重事实源并严格遵守 AAWO“组织树与工作流分离、Agent 提案而控制面应用”的设计｜E-025,E-026,E-028｜用户明确要求严格按照 AAWO 设计开发｜已在 E-029..E-032 复审并通过单团队工作流纵切
+- D-003｜2026-08-03｜F-008 先交付单团队 Workflow Optimizer 纵切：Optimizer 仅提案，控制面携 Owner fencing 审批和应用，独立 revision composition 重跑真实客户旅程，确定性指标决定保留或回滚；其余提案类型在存在真实注册表应用路径前保持 proposal-only｜防止模型自评、复用旧结果或本地影子状态伪装成自动演化｜E-029..E-032｜用户当时要求受控演化｜接入跨团队 SOP/Team Optimizer 或任一新注册表应用类型前复审权限、金丝雀与补偿边界
+- D-002｜2026-08-03｜保留 AgentContractProfile、CustomerJourney、Finding、Correction 等测试领域模型；组织树、工作流、Store/Checkpoint 和优化应用不在测试包内复制｜避免双重事实源并保持执行、证据和控制面边界｜E-025,E-026,E-028｜用户当时要求分层架构｜已由 D-005 统一切换为 Codex SDK
 - D-001｜2026-08-01｜将测试内核包装为可发现 Skill，Skill 只编排流程，确定性引擎负责执行和证据，模型推理保持可选｜降低复用门槛并保留 fail-closed 审计边界｜E-019,E-020｜用户确认增加 Skill 并测试两个真实 Agent｜P2 Team Tree 接入前复审

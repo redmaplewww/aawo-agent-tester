@@ -36,13 +36,13 @@
 
 按时间倒序追加：日期、完成事项、证据 ID、遗留问题、下一步和确认来源。不要覆盖旧记录。
 
-- 2026-08-08：完成真实 LLM 到 AAWO 提案边界的接入。`deepseek-v4-flash` 真实请求成功生成 Workflow proposal；首轮非合规输出被确定性解析器拒绝，并在一次校正回合后成功；端到端 Runner 基线 PASS、LLM proposal received、无人工审批时 AAWO evolution rejected、未自动应用；新 wheel 在全新 venv 中安装并完成同样的 AAWO/LLM smoke。37 项 AAWO 源码测试、compileall 和变更文件 Ruff 通过。证据：E-033..E-037。真实模型领域质量、成本和长期回归仍待验证。
+- 2026-08-08：完成真实 LLM 到人工控制面提案边界的接入。`deepseek-v4-flash` 真实请求成功生成 Workflow proposal；首轮非合规输出被确定性解析器拒绝，并在一次校正回合后成功；端到端 Runner 基线 PASS、LLM proposal received、无人工审批时 evolution rejected、未自动应用；新 wheel 在全新 venv 中安装并完成同样的 LLM smoke。37 项旧路线源码测试、compileall 和变更文件 Ruff 通过。证据：E-033..E-037。真实模型领域质量、成本和长期回归仍待验证。
 - 2026-08-25：按用户最新要求切换到官方 Codex SDK。新 `CodexReasoner` 使用本地 Codex 登录态、只读沙箱和 deny-all approval；真实 SDK 采用五个有界维度回合生成客户旅程，经过本地 schema/支持矩阵和浅层语义校验后由 Callable/HTTP/CLI Runner 执行，并对五个最低维度做实现完整性检查。增加真实交互 request/response/observation event evidence ID、Codex review evidence scope、越权 finding 拦截和缺覆盖/inconclusive/fail-closed 结算。22 项测试、Ruff、compileall、Skill quick_validate、CLI smoke 和真实 Codex fixture smoke 通过；fixture 的五条失败均如实保留，没有伪造 PASS。无真实目标 Agent 业务结论。证据：E-038..E-040。
-- 2026-08-03：完成 F-008 的单团队受控工作流演化纵切。真实 AAWO dev41 Optimizer/AgentServices/ProductionControlPlane/Team Owner fencing 串成审批链；基线与金丝雀使用不同 workflow revision composition，必须重新执行客户旅程；无执行节点变更时不允许伪造金丝雀；有害结果写入冻结控制事件并由 AAWO rollback 恢复基线。33 项源码测试、Ruff、compileall、wheel 构建和干净双 wheel 新旧 smoke 通过。证据：E-029..E-032。F-008 仍未覆盖跨团队 SOP、Team Optimizer 组织变更/补偿和其他注册表应用。
-- 2026-08-03：完成 F-014 P2 纵切。真实 AAWO dev41 形成五个权责 Department、Workflow 招聘的 Test Director 和七角色 TeamExecutor 责任树；PASS/BLOCKED/FAIL 均保持原结论，写能力在只读旅程中零调用；7 个 EvidenceRef 均绑定同一 team/memory scope；工作流 receipt 闭合并按 9 个 Agent 后序显式释放。28 项 pytest、Ruff、compileall、项目账本校验、wheel 构建和干净双 wheel smoke 通过。证据：E-024..E-028。仍未覆盖远程 Store、生产副作用和自进化应用。
-- 2026-07-31：P0 独立内核完成。13 项 pytest、Ruff、compileall、CLI/示例运行、wheel 构建与干净 wheel 安装通过；开发包 AAWO wheel 的真实 DepartmentPool 注册 smoke 通过。证据：E-002..E-009。P1 尚未开始，真实 LLM/MCP/浏览器/远程 Store/自进化仍未实现。
+- 2026-08-03：完成 F-008 的单团队受控工作流演化纵切。旧 Optimizer/AgentServices/ProductionControlPlane/Owner fencing 串成审批链；基线与金丝雀使用不同 workflow revision composition，必须重新执行客户旅程；无执行节点变更时不允许伪造金丝雀；有害结果写入冻结控制事件并回滚恢复基线。33 项旧路线源码测试、Ruff、compileall、wheel 构建和干净双 wheel 新旧 smoke 通过。证据：E-029..E-032。F-008 后续不再属于当前产品。
+- 2026-08-03：完成 F-014 P2 纵切。旧运行时形成五个权责 Department、Workflow 招聘的 Test Director 和七角色执行树；PASS/BLOCKED/FAIL 均保持原结论，写能力在只读旅程中零调用；7 个 EvidenceRef 均绑定同一 scope；工作流 receipt 闭合并按 9 个 Agent 后序显式释放。28 项旧路线 pytest、Ruff、compileall、项目账本校验、wheel 构建和干净双 wheel smoke 通过。证据：E-024..E-028。该纵切已退出当前产品。
+- 2026-07-31：P0 独立内核完成。13 项 pytest、Ruff、compileall、CLI/示例运行、wheel 构建与干净 wheel 安装通过；旧外部编排 wheel 的注册 smoke 通过。证据：E-002..E-009。P1 尚未开始，真实 LLM/MCP/浏览器/远程 Store/自进化仍未实现。
 - 2026-07-31：P1 纠正与推理边界完成。19 项 pytest、Ruff、compileall、更新 wheel 构建和干净安装通过；没有调用外部真实 LLM Provider，推理接口使用本地 HTTP 回环验证。证据：E-010..E-014。MCP/异步 Job、Team Tree 执行和自进化应用仍待实现。
 - 2026-07-31：P1 异步 Job、FixtureEnvironment 和副作用门禁完成。22 项 pytest、Ruff、compileall、更新 wheel 构建和干净安装通过。证据：E-015..E-016。MCP/浏览器、Team Tree 执行和自进化应用仍待实现。
 - 2026-07-31：完成 23 项 pytest、Ruff、compileall、pip wheel、干净 venv 导入和凭据模式扫描；通过真实 ResumeProbe FastAPI `/api/health` 路由的只读客户旅程 smoke，5 条账本事件，无 findings。证据：E-017..E-018。未覆盖上传/LLM 审查、MCP/浏览器、Team Tree、生产写操作和自进化应用。
 - 2026-08-01：完成 Skill、HTTP Runner 和结构化断言回归；8000 M8 真实 Agent 的健康、注册表、CAD 预留契约、破坏性动作门禁四个场景通过，错误文本断言被判 fail；Yunpai 9000 首次连接 inconclusive，随后隔离依赖配置的真实 uvicorn 入口在 9000 健康旅程通过；Yunpai 全套测试 189 passed/1 failed，失败为周末日期依赖测试。证据：E-019..E-023。
-- 2026-07-31：用户确认开始搭建；采用独立包 + 可选 AAWO 适配路线。原始 AAWO 压缩包不修改。证据：E-001。
+- 2026-07-31：用户确认开始搭建；采用独立包 + 可选外部编排适配路线。原始外部编排压缩包不修改。证据：E-001。

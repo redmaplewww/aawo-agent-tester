@@ -30,7 +30,7 @@ Settled report
   └─ customer-visible findings and limitations
 ```
 
-Codex 是理解和复核能力，不是执行权威；没有 AAWO、工作流注册表或外部编排运行时依赖。
+Codex 是理解和复核能力，不是执行权威；不依赖工作流注册表或外部编排运行时。
 真实 Codex SDK 使用五个有界的维度发现回合再合并计划，避免一个超大结构化回合卡住；每个回合仍经过同一严格解析器，冲突契约保持未确认。
 
 ## 3. 客户仿真协议

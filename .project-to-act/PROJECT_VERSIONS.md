@@ -21,4 +21,4 @@
 
 - `0.1.0.dev0`｜2026-08-25｜开发中、未发布｜全面切换到官方 `openai-codex` SDK；重命名为 `codex_agent_tester`；增加 Codex 客户式测试计划、五维完整性检查、交互证据回填、Codex review scope 和 Codex Agent Tester Skill｜兼容 Python 3.10+；不代表真实目标 Agent 领域质量或生产写操作｜E-038..E-040｜G-008 通过
 - `0.1.0.dev0`｜2026-08-08｜历史路线、已退出｜增加 llm-api-config 受管真实 LLM 提案接入、一次有界校正和旧控制面 proposal-only 边界｜历史兼容 Python 3.10+，不再作为当前安装依赖｜E-033..E-037｜旧 G-007；由 G-008 替代
-- `0.1.0.dev0`｜2026-08-03｜开发中、未发布｜同步 `pyproject.toml` 中既有版本事实；完成 AAWO dev41 Team Tree/Adaptive Workflow 与单团队受控工作流演化纵切｜兼容 Python 3.10+，可选依赖严格锁定 AAWO 0.6.0.dev41｜E-025..E-032｜G-005/G-006 通过，均不代表生产发布
+- `0.1.0.dev0`｜2026-08-03｜历史路线、已退出｜同步 `pyproject.toml` 中既有版本事实；完成旧 Team Tree/Adaptive Workflow 与单团队受控工作流演化纵切｜兼容 Python 3.10+，曾依赖外部编排包 0.6.0.dev41｜E-025..E-032｜历史 G-005/G-006；不再作为当前安装依赖

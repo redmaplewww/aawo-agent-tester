@@ -24,7 +24,7 @@ codex-agent-tester demo
 codex-agent-tester codex-status
 ```
 
-`openai-codex==0.147.0` 是唯一的模型运行时依赖。Codex SDK 复用本机 Codex 登录态；项目不读取或保存 API Key，也不再使用 AAWO 或 OpenAI-compatible Chat Completions。
+`openai-codex==0.147.0` 是唯一的模型运行时依赖。Codex SDK 复用本机 Codex 登录态；项目不读取或保存 API Key，也不支持 OpenAI-compatible Chat Completions。
 
 ## 真实客户仿真
 
@@ -40,4 +40,4 @@ py -3.12 examples\codex_customer_tester_smoke.py
 - [完整能力说明](CODEX_AGENT_TESTER_README.md)
 - [技术方案](CODEX_AGENT_TESTER_TECHNICAL_PLAN.md)
 
-当前仓库只包含 Codex SDK 路线；历史 AAWO 适配器和运行时已移除。
+当前仓库只包含 Codex SDK 路线；旧适配器和运行时已移除。

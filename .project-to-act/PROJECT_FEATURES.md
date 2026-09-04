@@ -37,10 +37,10 @@
 
 按时间倒序追加：日期、功能 ID、变化、原因、影响、证据 ID 和确认来源。
 
-- 2026-08-08：F-009 增加真实 LLM 接入。通过 llm-api-config 管理的 `deepseek` 配置读取通用环境变量，`ReasoningProvider` 在基线客户旅程后接收 Agent 契约、旅程、证据摘要和用户纠正，最多做一次确定性校验反馈重试；Runner 将成功提案送入 AAWO，未人工批准时明确 rejected。真实模型质量仍未验收。证据：E-033..E-036。
+- 2026-08-08：F-009 增加真实 LLM 接入。通过受管配置读取通用环境变量，`ReasoningProvider` 在基线客户旅程后接收 Agent 契约、旅程、证据摘要和用户纠正，最多做一次确定性校验反馈重试；Runner 将成功提案送入人工控制面，未人工批准时明确 rejected。真实模型质量仍未验收。证据：E-033..E-036。
 - 2026-08-25：F-007/F-008/F-014 标记已取消，旧编排运行时和集成入口移除；F-009 切换为官方 `openai-codex` SDK；新增 F-015/F-016，分别覆盖 Codex 客户式旅程生成和实现完整性检查。证据：E-038..E-040。
-- 2026-08-03：F-008 完成单团队 Workflow Optimizer 受控演化纵切，但整体仍为进行中。真实 dev41 Optimizer 通过 AgentServices 提案，ProductionControlPlane 在 Team Owner fencing 下审批/应用；revision-isolated TeamExecutor 真实重跑客户旅程，约束-only 修改不能伪造金丝雀，有害结果冻结并由 AAWO 回滚。尚缺跨团队 SOP、Team Optimizer 组织变更/补偿和 contract/scenario/evaluator 注册表应用。证据：E-029..E-032。
+- 2026-08-03：F-008 完成单团队 Workflow Optimizer 受控演化纵切，但整体仍为进行中。旧 Optimizer 通过 AgentServices 提案，ProductionControlPlane 在 Owner fencing 下审批/应用；revision-isolated TeamExecutor 真实重跑客户旅程，约束-only 修改不能伪造金丝雀，有害结果冻结并回滚。该路线已退出当前产品。证据：E-029..E-032。
 - 2026-08-03：F-014 完成；五个权责 Department、一个可执行 Adaptive Workflow 节点、TeamExecutor 七角色责任树、作用域 EvidenceRef、Checkpoint 和显式 IDLE 释放通过真实 dev41 集成与干净 wheel smoke。E-024/E-027 保留了目录契约和资源关闭的中间失败，最终证据为 E-025,E-026,E-028。
-- 2026-07-31：F-006、F-009 完成 P1 实现与回归；F-001..F-005 完成 P0 验收；F-007 完成 AAWO DepartmentPool 注册桥接 smoke。证据：E-002..E-014。
+- 2026-07-31：F-006、F-009 完成 P1 实现与回归；F-001..F-005 完成 P0 验收；F-007 完成旧外部编排注册桥接 smoke。证据：E-002..E-014。
 - 2026-07-31：F-002 增加显式 GET HTTP 只读方法；F-011 完成 ResumeProbe 健康路由的真实应用 smoke。证据：E-017,E-018。
 - 2026-08-01：F-012 Skill 化完成；F-013 完成 M8 真实 HTTP 旅程和 Yunpai Orchestrator 隔离/临时 9000 入口实测。证据：E-019..E-022。
